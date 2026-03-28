@@ -10,11 +10,6 @@ class HandGestureRecognizer:
     def __init__(self, model_path=None, num_hands=2,
                  min_detection_confidence=0.75,
                  min_tracking_confidence=0.75):
-        if model_path is None:
-            if os.path.exists("hand_landmarker.task"):
-                model_path = "hand_landmarker.task"
-            else:
-                model_path = "hand_landmarker.task"
 
         base_options = python.BaseOptions(model_asset_path=model_path)
         options = vision.HandLandmarkerOptions(
@@ -27,7 +22,7 @@ class HandGestureRecognizer:
         self.gesture_labels = ["none", "one", "two", "three", "four", "five",
                                "six", "seven", "eight", "nine", "ten"]
         # 角度阈值（度），超过此值认为手指伸直
-        self.straight_angle_threshold = 140
+        self.straight_angle_threshold = 170
 
     def _angle_between_points(self, p1, p2, p3):
         """
@@ -72,9 +67,7 @@ class HandGestureRecognizer:
         return angle > self.straight_angle_threshold
 
     def _count_fingers(self, hand_landmarks):
-        """
-        使用角度法计算伸出的手指数量（0~10）
-        """
+
         # 定义每个手指的关键点索引（指尖, 近节指间关节, 远节指间关节）
         # 拇指没有独立的近节指间，我们传参时特殊处理
         fingers = [
